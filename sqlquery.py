@@ -2,7 +2,7 @@ import psycopg2
 
 def connection():
     try:
-        conn = psycopg2.connect(dbname='please', user='annikov', password='12345678', host='localhost',
+        conn = psycopg2.connect(dbname='client_db', user='annikov', password='12345678', host='localhost',
                                 port=5432)
         print("connection is successful")
         return conn
@@ -11,7 +11,9 @@ def connection():
 
 def get_all_db(conn):
     cur=conn.cursor()
-    cur.execute("SELECT owl.owner_id,owl.location_id,cst.card_number,cst.average_check,cst.current_balance,cst.credit,cst.number_of_cards,"
+    cur.execute("SELECT "
+                "owl.owner_id,owl.location_id,"
+                "cst.card_number,cst.average_check,cst.current_balance,cst.credit,cst.number_of_cards,"
                 "crd.has_credit_card,crd.bank,crd.offer_type,"
                 "l.city,l.country,"
                 "own.gender,own.education,own.contact_type,own.response_to_campaign"
@@ -19,9 +21,9 @@ def get_all_db(conn):
                 " INNER JOIN card_statistics cst ON owl.owner_id=cst.owner_id"
                 " INNER JOIN locations l ON owl.location_id=l.location_id "
                 " INNER JOIN cards crd ON owl.owner_id=crd.owner_id "
-                " INNER JOIN owners own ON owl.owner_id=own.owner_id LIMIT 50;" ) #здесь мы пишем запрос в базу данных
-    pleases=cur.fetchall()
-    return pleases
+                " INNER JOIN owners own ON owl.owner_id=own.owner_id LIMIT 50;" )
+    client_db_fetch=cur.fetchall()
+    return client_db_fetch
 
 
 if __name__== '__main__':
