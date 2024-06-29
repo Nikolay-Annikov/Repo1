@@ -2,8 +2,8 @@ import psycopg2
 
 def connection():
     try:
-        conn = psycopg2.connect(dbname='client_db', user='annikov', password='12345678', host='localhost',
-                                port=5432)
+        conn = psycopg2.connect(dbname='client_db', user='annikov', password='12345678',
+                                host='localhost',port=5432)
         print("connection is successful")
         return conn
     except:
@@ -12,7 +12,7 @@ def connection():
 def get_all_db(conn):
     cur=conn.cursor()
     cur.execute("SELECT "
-                "owl.owner_id,owl.location_id,"
+                "owl.owner_id,"
                 "cst.card_number,cst.average_check,cst.current_balance,cst.credit,cst.number_of_cards,"
                 "crd.has_credit_card,crd.bank,crd.offer_type,"
                 "l.city,l.country,"
@@ -23,6 +23,7 @@ def get_all_db(conn):
                 " INNER JOIN cards crd ON owl.owner_id=crd.owner_id "
                 " INNER JOIN owners own ON owl.owner_id=own.owner_id LIMIT 50;" )
     client_db_fetch=cur.fetchall()
+    cur.close()
     return client_db_fetch
 
 
@@ -30,4 +31,7 @@ if __name__== '__main__':
     conn=connection()
     templ=get_all_db(conn)
     for i in templ:
-        print(i)
+        print(*i)
+
+
+connection().close()
